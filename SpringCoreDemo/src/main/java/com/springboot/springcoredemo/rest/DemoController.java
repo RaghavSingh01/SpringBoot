@@ -1,6 +1,7 @@
 package com.springboot.springcoredemo.rest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -12,11 +13,19 @@ public class DemoController {
     //Define a private field for the dependency
     private Coach myCoach;
 
-    //Define a constructor for dependency injection. Autowired is optional here because we only have one constructor here. theCoach is a dependency or helper being injected here.
+    // //Define a constructor for dependency injection. Autowired is optional here because we only have one constructor here. theCoach is a dependency or helper being injected here.
     @Autowired
-    public  DemoController(Coach theCoach){
+    public  DemoController(@Qualifier("trackCoach")Coach theCoach){
         myCoach = theCoach;
     }
+
+    // Setter Injection. The above was constructor injection. Traditional method name would be ***setCoach*** but it can be changed (Because of the autowired annotation).
+    // @Autowired
+    // public void doSomething(Coach theCoach){
+    //     myCoach = theCoach;
+    // }
+
+
 
     @GetMapping ("/")
     public String greet(){
