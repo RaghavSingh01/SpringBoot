@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 public class TrackCoach implements Coach{
     @Override
     public String getDailyWorkout(){
+        System.out.println("In Constructor: " + getClass().getSimpleName());
         return "Run 5 sprints 200 meter each!!!";
     }
 }
