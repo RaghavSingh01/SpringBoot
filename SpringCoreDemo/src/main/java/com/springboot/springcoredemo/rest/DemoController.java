@@ -1,6 +1,7 @@
 package com.springboot.springcoredemo.rest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -16,16 +17,17 @@ public class DemoController {
     // The coach has multiple implementations so we need to specify which to use which is why we are using @Qualifier annotation here which tells java which implementation to use.
     // @Autowired
     // public  DemoController(@Qualifier("trackCoach")Coach theCoach){
+    //     System.out.println("In Implementation: " + getClass().getSimpleName());
     //     myCoach = theCoach;
     // }
 
     // This is how we can normally create a constructor without having to name the implementation class we need to use because we have already marked it as primary.
     // @Primary can only be used for one implementation class and if multiple are marked as primary then the app will fail.
-    @Autowired
-    public DemoController(Coach theCoach){
-        System.out.println("In Constructor: " + getClass().getSimpleName());
-        myCoach = theCoach;
-    }
+    // @Autowired
+    // public DemoController(Coach theCoach){
+    //     System.out.println("In Constructor: " + getClass().getSimpleName());
+    //     myCoach = theCoach;
+    // }
 
 
     // Setter Injection. The above was constructor injection. Traditional method name would be ***setCoach*** but it can be changed (Because of the autowired annotation).
@@ -36,6 +38,19 @@ public class DemoController {
 
 
 
+    // This code here takes two constructors and hence two beans. This is here to check the bean scopes. If the bean scope of the track Coach here is singleton only on bean is 
+    // used for both the constructors and if prototype is used then two different ones will be created. The second constructor is also created here.
+
+    private Coach anotherCoach;
+
+    @Autowired
+    public  DemoController(@Qualifier("trackCoach")Coach theCoach, @Qualifier("trackCoach")Coach theAnotherCoach){
+        System.out.println("In Implementation: " + getClass().getSimpleName());
+        myCoach = theCoach;
+        anotherCoach = theAnotherCoach;
+    }
+
+
     @GetMapping ("/")
     public String greet(){
         return "Hello, this is the homepage";
@@ -44,6 +59,11 @@ public class DemoController {
     @GetMapping ("/dailyworkout")
     public String getDailyWorkout(){
         return myCoach.getDailyWorkout();
+    }
+
+    @GetMapping("/scope")
+    public String getScope(){
+        return "Comparing beans scope: myCoach == anotherCoach?->" + (myCoach == anotherCoach);
     }
 
 }
